@@ -11,6 +11,8 @@ public class CensusAnalyzerTest {
 	private static final String INDIAN_CENSUS_CSV_MISSING_HEADER ="C:\\Users\\Ibrahim Khaleel\\eclipse-workspace\\CensusAnalyzer\\src\\test\\resources\\MissingHeader.csv" ;
 	private static final String INDIAN_STATE_CODE_CSV_FILE_PATH = "C:\\Users\\Ibrahim Khaleel\\eclipse-workspace\\CensusAnalyzer\\src\\test\\resources\\IndiaStateCode.csv";
 	private static final String WRONG_FILE_TYPE = "C:\\Users\\Ibrahim Khaleel\\eclipse-workspace\\CensusAnalyzer\\src\\test\\resources\\IndiaStateCensusData.ppt" ;
+	private static final String WRONG_INDIAN_STATE_CODE_CSV_FILE_PATH =  "C:\\Users\\Ibrahim Khaleel\\eclipse-workspace\\CensusAnalyzer\\src\\main\\resources\\IndiaStateCode.csv";
+
 	@Test
 	public void givenIndianCensusCSC_WhenChecked_ShouldReturnCorrectRecords() {
 		StateCensusAnalyser censusAnalyser = new StateCensusAnalyser();
@@ -61,5 +63,29 @@ public class CensusAnalyzerTest {
 	            Assert.assertEquals(CensusAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUES, e.type);
 	        }
 	 }
+	
+	    @Test
+	    public void givenStateCensusCSVFile_ShouldMatchNumberOfRecordsInFile() {
+	        try {
+	            StateCensusAnalyser codeAnalyser = new StateCensusAnalyser();
+	            int count = codeAnalyser.loadStateCode(INDIAN_STATE_CODE_CSV_FILE_PATH);
+	            Assert.assertEquals(37 , count);
+	        }catch (CensusAnalyserException e) {
+	        }
+	    }
+
+	    @Test
+	    public void givenStateCensusCSVFile_WhenPathIsIncorrect_ShouldThrowException() {
+	        try {
+	            StateCensusAnalyser censusAnalyser = new StateCensusAnalyser();
+	            ExpectedException exceptionRule = ExpectedException.none();
+	            exceptionRule.expect(CensusAnalyserException.class);
+	            censusAnalyser.loadStateCode(WRONG_INDIAN_STATE_CODE_CSV_FILE_PATH);
+	        } catch (CensusAnalyserException e) {
+	            System.out.println(e.getMessage());
+	            Assert.assertEquals(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM , e.type);
+	        }
+	    }
+
 	
 }
