@@ -13,13 +13,13 @@ import com.opencsv.bean.CsvToBeanBuilder;
 public class StateCensusAnalyser {
 	public int loadCensus(String csvFilePath) throws CensusAnalyserException 
 	{
-		try {
-			FileTypeValidator fileTypeValidator = new FileTypeValidator();
-			boolean result = fileTypeValidator.validateFileType(csvFilePath);
-			if(!result) {
-				throw new CensusAnalyserException("Enter correct file type", CensusAnalyserException.ExceptionType.WRONG_TYPE);
-			}
-			Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
+		FileTypeValidator fileTypeValidator = new FileTypeValidator();
+		boolean result = fileTypeValidator.validateFileType(csvFilePath);
+		if(!result) {
+			throw new CensusAnalyserException("Enter correct file type", CensusAnalyserException.ExceptionType.WRONG_TYPE);
+		}
+		try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));){
+			
 			Iterator<IndianStateCensusData> censusCSVIterator = this.getCSVFileIterator(reader, IndianStateCensusData.class);
 			Iterable<IndianStateCensusData> csvIterable = () -> censusCSVIterator;
 			int numOfEntries = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
@@ -34,13 +34,12 @@ public class StateCensusAnalyser {
 
 	}
 	public int loadStateCode(String csvFilePath) throws CensusAnalyserException {
-		try {
-			FileTypeValidator fileTypeValidator = new FileTypeValidator();
-			boolean result = fileTypeValidator.validateFileType(csvFilePath);
-			if(!result) {
-				throw new CensusAnalyserException("Enter correct file type", CensusAnalyserException.ExceptionType.WRONG_TYPE);
-			}
-			Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
+		FileTypeValidator fileTypeValidator = new FileTypeValidator();
+		boolean result = fileTypeValidator.validateFileType(csvFilePath);
+		if(!result) {
+			throw new CensusAnalyserException("Enter correct file type", CensusAnalyserException.ExceptionType.WRONG_TYPE);
+		}
+		try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));){
 			Iterator<IndianStateCode> stateCodeCSVIterator = this.getCSVFileIterator(reader, IndianStateCode.class);
 			Iterable<IndianStateCode> stateCodeCSVIterable = () -> stateCodeCSVIterator ;
 			int numOfEntries = (int) StreamSupport.stream(stateCodeCSVIterable.spliterator(), false).count();
