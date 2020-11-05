@@ -17,7 +17,8 @@ public class StateCensusAnalyser {
 			throw new CensusAnalyserException("Enter correct file type", CensusAnalyserException.ExceptionType.WRONG_TYPE);
 		}
 		try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));){
-			Iterator<IndianStateCensusData> censusCSVIterator = new OpenCsvBuilder().getCSVFileIterator(reader, IndianStateCensusData.class);
+			ICSVBuilder csvBuilderFactory = CSVBuilderFactory.createCSVBuilder();
+			Iterator<IndianStateCensusData> censusCSVIterator = csvBuilderFactory.getCSVFileIterator(reader, IndianStateCensusData.class);
 			return getCount(censusCSVIterator);
 		} catch (IOException e) {
 			throw new CensusAnalyserException("Please enter correct path",
@@ -28,6 +29,7 @@ public class StateCensusAnalyser {
 		}
 
 	}
+
 	public int loadStateCode(String csvFilePath) throws CensusAnalyserException {
 		FileTypeValidator fileTypeValidator = new FileTypeValidator();
 		boolean result = fileTypeValidator.validateFileType(csvFilePath);
@@ -35,7 +37,8 @@ public class StateCensusAnalyser {
 			throw new CensusAnalyserException("Enter correct file type", CensusAnalyserException.ExceptionType.WRONG_TYPE);
 		}
 		try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));){
-			Iterator<IndianStateCode> stateCodeCSVIterator = new OpenCsvBuilder().getCSVFileIterator(reader, IndianStateCode.class);
+			ICSVBuilder csvBuilderFactory = CSVBuilderFactory.createCSVBuilder();
+			Iterator<IndianStateCensusData> stateCodeCSVIterator = csvBuilderFactory.getCSVFileIterator(reader, IndianStateCensusData.class);
 			return getCount(stateCodeCSVIterator);
 		} catch (IOException e) {
 			throw new CensusAnalyserException("Please enter correct path",
